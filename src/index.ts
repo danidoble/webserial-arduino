@@ -15,7 +15,7 @@
  * import type { SerialPortFilter } from '@danidoble/webserial-arduino';
  *
  * const filters: SerialPortFilter[] = [{ usbVendorId: 0x2341 }];
- * const arduino = new Arduino(filters);
+ * const arduino = new Arduino({ filters });
  *
  * arduino.on('arduino:connected', (data) => console.log('Connected:', data));
  * await arduino.connect();
@@ -27,4 +27,15 @@ export { Arduino } from './arduino';
 
 // Re-export commonly used types from webserial-core so consumers do not need
 // to install webserial-core solely for the type definitions.
-export type { SerialPortFilter, SerialDeviceOptions, SerialEventMap, SerialParser, SerialProvider } from 'webserial-core';
+export type {
+  SerialPortFilter,
+  SerialDeviceOptions,
+  SerialEventMap,
+  SerialParser,
+  SerialProvider,
+  SerialPolyfillOptions
+} from 'webserial-core';
+
+// Re-export built-in providers so consumers can use them without importing
+// directly from webserial-core.
+export { WebUsbProvider, createBluetoothProvider, createWebSocketProvider } from 'webserial-core';

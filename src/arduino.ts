@@ -23,7 +23,7 @@
  */
 
 import { AbstractSerialDevice, delimiter } from 'webserial-core';
-import type { SerialPortFilter } from 'webserial-core';
+import type { SerialDeviceOptions, SerialPortFilter, SerialProvider } from 'webserial-core';
 
 // ---------------------------------------------------------------------------
 // Module augmentation – extends the core event map with Arduino-specific events
@@ -106,9 +106,18 @@ export class Arduino extends AbstractSerialDevice<string> {
    * The port is **not** opened here; call {@link connect} to initiate the
    * connection and handshake.
    *
-   * @param filters - One or more USB vendor/product filters used to identify
+   * @param options - Optional configuration object. All properties are optional; see
+   *  the individual property descriptions for details and defaults.
+   *
+   * @param options.filters - One or more USB vendor/product filters used to identify
    *   the target Arduino. Passed to `navigator.serial.requestPort()` and
    *   `navigator.serial.getPorts()`.
+   *
+   * @param options.provider - Optional custom `SerialProvider` implementation. By default,
+   *   the class uses the built-in provider that wraps the Web Serial API.
+   *
+   * @param options.polyfillOptions - Optional custom settings to be passed to the
+   *  built-in provider when used in a polyfill environment (e.g. Node.js).
    *
    * @example
    * ```ts
@@ -119,8 +128,16 @@ export class Arduino extends AbstractSerialDevice<string> {
    * const uno = new Arduino([{ usbVendorId: 0x2341, usbProductId: 0x0043 }]);
    * ```
    */
-  constructor(filters: SerialPortFilter[]) {
-    super({
+  constructor({
+    filters = [],
+    provider,
+    polyfillOptions
+  }: {
+    filters?: SerialPortFilter[];
+    provider?: SerialProvider;
+    polyfillOptions?: SerialDeviceOptions<string>;
+  } = {}) {
+    const opts: SerialDeviceOptions<string> = {
       baudRate: 9600,
       dataBits: 8,
       stopBits: 1,
@@ -132,8 +149,15 @@ export class Arduino extends AbstractSerialDevice<string> {
       autoReconnect: true,
       autoReconnectInterval: 1500,
       handshakeTimeout: 2000,
-      filters,
-    });
+      filters
+    };
+    if (provider) {
+      opts.provider = provider;
+    }
+    if (polyfillOptions) {
+      Object.assign(opts, polyfillOptions);
+    }
+    super(opts);
     this.startListening();
   }
 

@@ -7,7 +7,7 @@ import { Arduino } from '../src/arduino';
 
 /** Creates a fresh Arduino instance for each test (no real port involved). */
 function makeArduino(): Arduino {
-  return new Arduino([{ usbVendorId: 0x2341 }]);
+  return new Arduino({ filters: [{ usbVendorId: 0x2341 }] });
 }
 
 /**
@@ -15,11 +15,7 @@ function makeArduino(): Arduino {
  * on the instance (the same way the core library does internally).
  */
 function simulateData(arduino: Arduino, data: string): void {
-  (arduino as unknown as { emit: (event: string, ...args: unknown[]) => boolean }).emit(
-    'serial:data',
-    data,
-    arduino,
-  );
+  (arduino as unknown as { emit: (event: string, ...args: unknown[]) => boolean }).emit('serial:data', data, arduino);
 }
 
 // ---------------------------------------------------------------------------
@@ -36,10 +32,7 @@ describe('Arduino – instantiation', () => {
   });
 
   test('accepts multiple USB filters', () => {
-    const arduino = new Arduino([
-      { usbVendorId: 0x2341, usbProductId: 0x0043 },
-      { usbVendorId: 0x2a03 },
-    ]);
+    const arduino = new Arduino({ filters: [{ usbVendorId: 0x2341, usbProductId: 0x0043 }, { usbVendorId: 0x2a03 }] });
     expect(arduino).toBeInstanceOf(Arduino);
   });
 });
