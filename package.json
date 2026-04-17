@@ -1,7 +1,7 @@
 {
   "name": "@danidoble/webserial-arduino",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A starter for creating a TypeScript package.",
   "author": "Danidoble <ddanidoble@gmail.com>",
   "license": "GPL-3.0-only",
@@ -41,10 +41,10 @@
     "globals": "^17.5.0",
     "prettier": "3.8.3",
     "tsdown": "^0.21.9",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2",
     "vitest": "^4.1.4",
-    "webserial-core": "^2.0.3"
+    "webserial-core": "^2.1.0"
   },
   "peerDependencies": {
     "webserial-core": "^2.0.3"

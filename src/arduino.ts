@@ -258,6 +258,10 @@ export class Arduino extends AbstractSerialDevice<string> {
    */
   private startListening(): void {
     this.on('serial:data', (data: string) => {
+      if(String(data).trim() === '') {
+        return; // ignore empty lines
+      }
+
       let emitted = false;
 
       if (String(data).includes('connected')) {
